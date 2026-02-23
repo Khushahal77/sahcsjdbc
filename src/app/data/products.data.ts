@@ -1,6 +1,6 @@
 import { Product } from '../models/product.model';
 
-const placeholderImage = 'https://placehold.co/300x300/e8f4f8/1a1a2e?text=Product';
+const placeholderBase = 'https://placehold.co/300x300/e8f4f8/1a1a2e?text=';
 
 export const CATEGORY_SECTIONS = [
   { id: 'baby-care', title: 'Baby Care', banner: 'https://placehold.co/1200x200/e8f4f8/1a1a2e?text=Baby+Care' },
@@ -13,8 +13,14 @@ export const CATEGORY_SECTIONS = [
   { id: 'first-aid', title: 'First Aid', banner: 'https://placehold.co/1200x200/e8f4f8/1a1a2e?text=First+Aid' },
 ] as const;
 
+function imageFor(name: string) {
+  // create a readable placeholder image with the product name
+  const txt = encodeURIComponent(name.replace(/\s+/g, '+'));
+  return `${placeholderBase}${txt}`;
+}
+
 function createProduct(id: string, name: string, price: number, desc: string, category: string): Product {
-  return { id, name, price, description: desc, imageUrl: placeholderImage, category };
+  return { id, name, price, description: desc, imageUrl: imageFor(name), category };
 }
 
 export const MOCK_PRODUCTS: Product[] = [

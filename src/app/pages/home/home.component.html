@@ -1,8 +1,126 @@
-<div class="page home-page">
-  <h1>Welcome Home</h1>
-  <p>You are successfully logged in. This page is protected and only visible to authenticated users.</p>
-  <div class="card">
-    <h2>Dashboard</h2>
-    <p>Explore the app using the navigation above. Browse Categories or view your Cart anytime.</p>
+<main class="home-page">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <h1>Your Trusted Online Pharmacy</h1>
+        <p class="lead">Fast delivery · Genuine medicines · Expert support — every time you order.</p>
+        <div class="hero-ctas">
+          <a routerLink="/categories" class="btn btn-primary">Shop Now</a>
+          <button class="btn btn-ghost" (click)="showUploadModal = true">Upload Prescription</button>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden>
+        <div class="med-case">
+          <img src="https://placehold.co/420x320/e8f4f8/1a1a2e?text=Medicines" alt="Medicines" />
+          <div class="badge">Free delivery on ₹499+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deals of the Day -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Deals of the Day</h2>
+      <p class="muted">Limited-time discounts — grab them before they're gone.</p>
+    </div>
+    <div class="deals-grid">
+      <article *ngFor="let deal of deals" class="deal-card" (click)="navigateToProduct(deal.product.id)">
+        <div class="deal-image">
+          <img [src]="deal.product.imageUrl" [alt]="deal.product.name" />
+          <div class="pill">-{{ deal.discountPercent }}%</div>
+        </div>
+        <div class="deal-body">
+          <h3 class="deal-title">{{ deal.product.name }}</h3>
+          <div class="prices">
+            <span class="original">₹{{ deal.product.price }}</span>
+            <span class="discounted">₹{{ discountedPrice(deal.product, deal.discountPercent) }}</span>
+          </div>
+          <div class="deal-actions">
+            <button class="btn btn-outline" (click)="$event.stopPropagation(); handleAddToCart(deal.product, true, deal.discountPercent)">Add to cart</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Categories Preview -->
+  <section class="section alt">
+    <div class="section-header">
+      <h2>Browse by Category</h2>
+      <p class="muted">Quick links to the most popular categories.</p>
+    </div>
+    <div class="categories-grid">
+      <a *ngFor="let c of categories" class="cat-card" [routerLink]="['/categories']" [fragment]="c.id">
+        <div class="cat-icon">{{ c.icon }}</div>
+        <div class="cat-title">{{ c.title }}</div>
+        <div class="cat-cta">Explore →</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Featured Products</h2>
+      <p class="muted">Hand-picked for your health and wellness.</p>
+    </div>
+    <div class="products-grid">
+      <article *ngFor="let p of featured" class="product-card" (click)="navigateToProduct(p.id)">
+        <div class="product-media"><img [src]="p.imageUrl" [alt]="p.name" /></div>
+        <div class="product-body">
+          <div class="product-title">{{ p.name }}</div>
+          <div class="product-meta">{{ p.category | titlecase }}</div>
+          <div class="product-bottom">
+            <div class="price">₹{{ p.price }}</div>
+            <button class="btn btn-sm" (click)="$event.stopPropagation(); handleAddToCart(p)">Add</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Why choose us -->
+  <section class="section alt features">
+    <div class="section-header">
+      <h2>Why Choose NetPharma</h2>
+      <p class="muted">Trust, convenience and care — built into every order.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="f-ico">⚡</div><h4>Fast Delivery</h4><p>Same-day options in many areas.</p></div>
+      <div class="feature-card"><div class="f-ico">✔️</div><h4>Genuine Products</h4><p>Licensed suppliers and batch-verified medicines.</p></div>
+      <div class="feature-card"><div class="f-ico">🔒</div><h4>Secure Payment</h4><p>Encrypted payments and easy refunds.</p></div>
+      <div class="feature-card"><div class="f-ico">☎️</div><h4>24/7 Support</h4><p>Pharmacists and support staff available round the clock.</p></div>
+    </div>
+  </section>
+
+  <!-- Prescription Upload CTA Banner -->
+  <section class="prescription-cta">
+    <div class="cta-inner">
+      <div>
+        <h3>Need a prescription medicine?</h3>
+        <p>Upload your doctor’s prescription and we’ll take care of the rest.</p>
+      </div>
+      <div>
+        <button class="btn btn-primary" (click)="showUploadModal = true">Upload Prescription</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upload Modal (simple) -->
+  <div class="modal-backdrop" *ngIf="showUploadModal">
+    <div class="modal">
+      <button class="modal-close" (click)="closeModal()">✕</button>
+      <h3>Upload Prescription</h3>
+      <p *ngIf="uploadTarget">You're ordering <strong>{{ uploadTarget.name }}</strong>. Please upload doctor's prescription to proceed.</p>
+      <p *ngIf="!uploadTarget">Upload any valid prescription from your device.</p>
+      <input type="file" (change)="handleFileSelectedEvent($event)" accept="image/*,application/pdf" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+      </div>
+      <div class="upload-success" *ngIf="uploadSuccess">Uploaded — added to cart ✅</div>
+    </div>
   </div>
-</div>
+
+</main>

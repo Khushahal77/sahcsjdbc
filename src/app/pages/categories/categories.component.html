@@ -1,34 +1,76 @@
 <div class="categories-page">
-  <header class="page-header">
-    <h1>Categories</h1>
-    <p>Browse our medical and wellness products by category.</p>
-  </header>
+  <!-- Hero Section -->
+  <section class="hero-banner">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Shop by Category</h1>
+      <p class="hero-subtitle">Browse our premium medical and wellness products carefully curated for your health needs</p>
+    </div>
+  </section>
 
-  @for (section of sections; track section.id) {
-    <section [id]="section.id" class="category-section">
-      <div class="section-banner">
-        <img [src]="section.banner" [alt]="section.title" />
+  <div class="categories-container">
+    <!-- Categories Grid -->
+    <section class="categories-grid-section">
+      <h2 class="section-heading">All Categories</h2>
+      <div class="category-cards-grid">
+        <div *ngFor="let section of sections" class="category-card" [attr.data-category]="section.id">
+          <div class="category-icon">💊</div>
+          <h3 class="category-title">{{ section.title }}</h3>
+          <span class="category-arrow">→</span>
+        </div>
       </div>
-      <h2 class="section-title">{{ section.title }}</h2>
-      <div class="product-grid">
-        @for (product of productsByCategory[section.id]; track product.id) {
-          <div class="product-card">
-            <div class="product-image">
-              <img [src]="product.imageUrl" [alt]="product.name" />
+    </section>
+
+    <!-- Products Sections -->
+    <div class="products-sections">
+      <section *ngFor="let section of sections" [id]="section.id" class="product-section" [class.fade-in]="true">
+        <div class="section-header">
+          <h2 class="section-title">{{ section.title }}</h2>
+          <span class="product-count">{{ (productsByCategory[section.id] || []).length }} products</span>
+        </div>
+
+        <div class="product-grid">
+          <div 
+            *ngFor="let product of productsByCategory[section.id]" 
+            class="product-card"
+            [class.has-discount]="product.discountPercent"
+            [class.limited-offer]="product.isLimited"
+          >
+            <!-- Product Image Container -->
+            <div class="product-image-container">
+              <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />
+              
+              <!-- Discount Badge -->
+              <div *ngIf="product.discountPercent" class="discount-badge">
+                <span class="discount-percent">{{ product.discountPercent }}% OFF</span>
+              </div>
+
+              <!-- Limited Offer Ribbon -->
+              <div *ngIf="product.isLimited" class="limited-ribbon">Limited</div>
             </div>
+
+            <!-- Product Content -->
             <div class="product-content">
               <h3 class="product-name">{{ product.name }}</h3>
               <p class="product-desc">{{ product.description }}</p>
-              <div class="product-footer">
-                <span class="product-price">&#8377;{{ product.price }}</span>
-                <button class="btn-add-cart" (click)="addToCart(product)">
-                  Add to Cart
-                </button>
+
+              <!-- Price Section -->
+              <div class="price-section">
+                <div class="price-container">
+                  <span *ngIf="product.originalPrice" class="original-price">₹{{ product.originalPrice }}</span>
+                  <span class="current-price">₹{{ product.price }}</span>
+                </div>
               </div>
+
+              <!-- Add to Cart Button -->
+              <button class="btn-add-cart" (click)="addToCart(product)">
+                <span class="btn-icon">🛒</span>
+                Add to Cart
+              </button>
             </div>
           </div>
-        }
-      </div>
-    </section>
-  }
+        </div>
+      </section>
+    </div>
+  </div>
 </div>

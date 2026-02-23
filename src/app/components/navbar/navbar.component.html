@@ -1,12 +1,78 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <a routerLink="/home" class="navbar-brand">NetPharma</a>
-    <button class="navbar-toggle" (click)="toggleMenu()" [attr.aria-expanded]="isOpen">
-      <span class="toggle-icon"></span>
-      <span class="toggle-icon"></span>
-      <span class="toggle-icon"></span>
-    </button>
+    <a routerLink="/home" class="navbar-brand">
+      <span class="brand-icon">💊</span>
+      <span class="brand-text">NetPharma</span>
+    </a>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search medicines..." 
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput(searchQuery)"
+          (blur)="onSearchBlur()"
+        />
+        <button 
+          *ngIf="searchQuery" 
+          class="search-clear" 
+          (click)="clearSearch()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Search Results Dropdown -->
+      <div *ngIf="showSearchResults" class="search-dropdown">
+        <div *ngIf="searchResults.length > 0" class="search-results-list">
+          <div class="search-header">
+            <span class="search-keyword">Search Results for: <strong>{{ searchQuery }}</strong></span>
+            <span class="results-count">{{ searchResults.length }}</span>
+          </div>
+          <div class="search-items">
+            <a 
+              *ngFor="let product of searchResults.slice(0, 8)" 
+              (click)="onSearchResultClick(product)"
+              class="search-item"
+            >
+              <img [src]="product.imageUrl" [alt]="product.name" class="search-item-image" />
+              <div class="search-item-content">
+                <div class="search-item-name">{{ product.name }}</div>
+                <div class="search-item-category">{{ product.category | titlecase }}</div>
+                <div class="search-item-price">₹{{ product.price }}</div>
+              </div>
+              <span class="search-item-arrow">→</span>
+            </a>
+          </div>
+          <div *ngIf="searchResults.length > 8" class="search-footer">
+            <a routerLink="/categories" (click)="clearSearch()" class="view-all-link">
+              View all {{ searchResults.length }} results →
+            </a>
+          </div>
+        </div>
+        <div *ngIf="searchResults.length === 0" class="search-empty">
+          <span class="empty-icon">📦</span>
+          <p class="empty-message">No medicines found for "{{ searchQuery }}"</p>
+          <p class="empty-hint">Try searching with different keywords</p>
+        </div>
+      </div>
+    </div>
+
+   
     <ul class="navbar-menu" [class.open]="isOpen">
+      <li class="theme-toggle-container">
+        <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Switch to ' + (isDarkMode ? 'light' : 'dark') + ' mode'">
+          @if (isDarkMode) {
+            <span class="theme-icon">☀️</span>
+          } @else {
+            <span class="theme-icon">🌙</span>
+          }
+        </button>
+      </li>
       <li><a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">Home</a></li>
       <li class="nav-dropdown">
         <a href="javascript:void(0)" class="dropdown-trigger" (click)="toggleCategories()">

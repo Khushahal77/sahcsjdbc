@@ -1,0 +1,53 @@
+<main class="product-page" *ngIf="product">
+  <div class="container">
+    <div class="grid">
+      <div class="left">
+        <div class="image-wrap">
+          <img [src]="currentImage || product.imageUrl" [alt]="product.name" />
+          <div class="ribbon" *ngIf="prescriptionRequired">Prescription</div>
+        </div>
+        <div class="thumbs">
+          <img *ngFor="let g of gallery" [src]="g" (click)="changeImage(g)" [class.active]="g===currentImage" alt="thumb" />
+        </div>
+      </div>
+      <div class="right">
+        <h1 class="title">{{ product.name }}</h1>
+        <div class="meta">Category: <strong>{{ product.category | titlecase }}</strong></div>
+        <p class="desc">{{ product.description }}</p>
+        <div class="specs">
+          <div><strong>Batch:</strong> {{ batchNumber }}</div>
+          <div><strong>Mfg Date:</strong> {{ manufactureDate }}</div>
+          <div><strong>Expiry:</strong> {{ expiryDate }}</div>
+          <div><strong>Manufacturer:</strong> {{ manufacturer }}</div>
+          <div><strong>Origin:</strong> {{ origin }}</div>
+          <div><strong>SKU:</strong> {{ sku }}</div>
+        </div>
+        <div class="buy">
+          <div class="price">₹{{ product.price }}</div>
+          <div class="actions">
+            <button class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
+            <a routerLink="/cart" class="btn btn-ghost">Go to Cart</a>
+          </div>
+        </div>
+        <div *ngIf="prescriptionRequired" class="presc-note">⚠️ This medicine may require a valid prescription. Upload one at checkout.</div>
+      </div>
+    </div>
+
+    <section class="related" *ngIf="related.length">
+      <h3>Related Products</h3>
+      <div class="rel-grid">
+        <article *ngFor="let r of related" class="rel-card">
+          <img [src]="r.imageUrl" [alt]="r.name" />
+          <div class="r-name">{{ r.name }}</div>
+          <div class="r-price">₹{{ r.price }}</div>
+          <button class="btn btn-sm" (click)="cart.addItem(r,1)">Add</button>
+        </article>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div *ngIf="!product" class="not-found">
+  <p>Product not found.</p>
+  <a routerLink="/categories" class="btn btn-ghost">Back to Categories</a>
+</div>
