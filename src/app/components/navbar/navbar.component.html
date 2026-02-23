@@ -1,0 +1,44 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <a routerLink="/home" class="navbar-brand">NetPharma</a>
+    <button class="navbar-toggle" (click)="toggleMenu()" [attr.aria-expanded]="isOpen">
+      <span class="toggle-icon"></span>
+      <span class="toggle-icon"></span>
+      <span class="toggle-icon"></span>
+    </button>
+    <ul class="navbar-menu" [class.open]="isOpen">
+      <li><a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">Home</a></li>
+      <li class="nav-dropdown">
+        <a href="javascript:void(0)" class="dropdown-trigger" (click)="toggleCategories()">
+          Categories
+          <span class="dropdown-arrow" [class.open]="dropdownOpen">&#9660;</span>
+        </a>
+        <ul class="dropdown-menu" [class.open]="dropdownOpen">
+          <li><a routerLink="/categories" fragment="baby-care" (click)="closeDropdown()">Baby Care</a></li>
+          <li><a routerLink="/categories" fragment="pregnancy" (click)="closeDropdown()">Pregnancy</a></li>
+          <li><a routerLink="/categories" fragment="physical-health-wellness" (click)="closeDropdown()">Physical Health &amp; Wellness</a></li>
+          <li><a routerLink="/categories" fragment="vitamins" (click)="closeDropdown()">Vitamins</a></li>
+          <li><a routerLink="/categories" fragment="daily-needs" (click)="closeDropdown()">Daily Needs</a></li>
+          <li><a routerLink="/categories" fragment="protein-powder" (click)="closeDropdown()">Protein Powder</a></li>
+          <li><a routerLink="/categories" fragment="old-age" (click)="closeDropdown()">Old Age (60+)</a></li>
+          <li><a routerLink="/categories" fragment="first-aid" (click)="closeDropdown()">First Aid</a></li>
+        </ul>
+      </li>
+      <li>
+        <a routerLink="/cart" routerLinkActive="active" class="cart-link">
+          Cart
+          @if (cartCount > 0) {
+            <span class="cart-badge">{{ cartCount }}</span>
+          }
+        </a>
+      </li>
+      <li><a routerLink="/order" routerLinkActive="active">Order</a></li>
+
+      @if (authService.isLoggedIn()) {
+        <li><button class="btn-logout" (click)="logout()">Logout</button></li>
+      } @else {
+        <li><a routerLink="/login" routerLinkActive="active">Login</a></li>
+      }
+    </ul>
+  </div>
+</nav>
